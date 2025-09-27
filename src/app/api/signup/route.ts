@@ -19,6 +19,10 @@ export async function POST(request:Request){
             },{status:404})
         }
 
+        if(!existingVerifiedUser){
+            console.log("No existing verified user existis, Proceeding with the function call")
+        }
+
         const existingUserByEmail = await UserModel.findOne({
             email
         })
