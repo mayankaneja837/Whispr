@@ -1,10 +1,7 @@
-"use client"
-import React, { useState } from "react"
+import * as React from "react"
 
-const page = ()=>{
+export function SignInComponent(){
   return <div>
-    Page
+    Sign-in Page
   </div>
 }
-
-export default page

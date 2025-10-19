@@ -21,7 +21,7 @@ export async function GET(request:Request){
             const usernameErrors= result.error || []
             return Response.json({
                 success:false,
-                message:"Error while validating the username"
+                message:"Username is not available to use"
             },{
                 status:404
             })

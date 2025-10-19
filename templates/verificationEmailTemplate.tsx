@@ -9,7 +9,7 @@ export function EmailTemplate({username,verifyCode}:EmailTemplateProps) {
   return (
     <div>
       <h1>Welcome, user {username}!
-        Here's your {verifyCode}
+        Here's your code: {verifyCode}
       </h1>
     </div>
   );
