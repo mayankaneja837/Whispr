@@ -14,11 +14,12 @@ export async function SendVerificationEmail(
             subject:'verification email',
             react:EmailTemplate({username,verifyCode})
         })
-        return {succes:true,message:"Verification email sent successfully"}
+        console.log("Email response generated")
+        return {success:true,message:"Verification email sent successfully"}
 
     } catch (emailError) {
         console.error("error sending verification mail",emailError)
-        return {succes:false,message:"Failed to send verification email",//statuscode:400}
+        return {success:false,message:"Failed to send verification email",//statuscode:400}
         }
 }
 }

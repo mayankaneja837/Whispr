@@ -27,7 +27,7 @@ export async function POST(request:Request){
             email
         })
 
-        const verifyCode = Math.floor(1000000 + Math.random()*900000).toString()
+        const verifyCode = Math.floor(100000 + Math.random()*900000).toString()
         if(existingUserByEmail){
             if(existingUserByEmail.isVerified){
                 return Response.json({
@@ -38,15 +38,14 @@ export async function POST(request:Request){
                 })
             }
             else{
+                existingUserByEmail.username = username
                 const hashedPassword = await bcrypt.hash(password,10)
                 existingUserByEmail.password = hashedPassword
                 existingUserByEmail.verifyCode = verifyCode
                 existingUserByEmail.verifyCodeExpiry = new Date(Date.now()+360000)
                 await existingUserByEmail.save()
 
-                return Response.json({
-
-                })
+                console.log("Existing user updated")
             }
         }
         else{
@@ -65,11 +64,18 @@ export async function POST(request:Request){
                 messages: []
             })
             await newUser.save()
+            console.log("New user saved")
         }
 
         const emailResponse = await SendVerificationEmail(email,username,verifyCode)
 
-        if(!emailResponse){
+
+        if(emailResponse){
+            console.log("Email Response exists")
+            console.log(emailResponse)
+        }
+
+        if(!emailResponse.success){
             return Response.json({
                 success:false,
                 message:"trouble sending verification email to the user"
@@ -88,7 +94,7 @@ export async function POST(request:Request){
         console.error("Error registering user",error)
         return Response.json({
             success:false,
-            message:"Erro registering user"
+            message:"Error registering user"
         },{
             status:500
         })

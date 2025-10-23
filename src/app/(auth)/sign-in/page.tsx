@@ -1,7 +1,9 @@
 import * as React from "react"
 
-export function SignInComponent(){
+const SigninComponent = ()=>{
   return <div>
-    Sign-in Page
+    Hello from the Sign-In Component
   </div>
 }
+
+export default SigninComponent

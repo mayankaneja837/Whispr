@@ -14,7 +14,7 @@ export async function POST(request:Request){
 
         if(!user){
             return Response.json({
-                sucess:false,
+                sucesss:false,
                 message:"User with the entered username does not exist"
             },{
                 status:404
@@ -34,7 +34,8 @@ export async function POST(request:Request){
             },{
                 status:200
             })
-        }else if(!isCodeValid){
+        }
+        else if(!isCodeValid){
             return Response.json({
                 success:false,
                 message:"Code entered is not valid"

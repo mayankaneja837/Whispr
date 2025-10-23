@@ -1,7 +1,7 @@
 import {Message} from "@/models/User"
 
 export interface ApiResponse{
-    succes: Boolean,
+    success: Boolean,
     message: string,
     statuscode?: number,
     isAcceptingMessage?:Boolean,
