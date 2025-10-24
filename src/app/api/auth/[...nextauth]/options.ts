@@ -11,7 +11,7 @@ export const authOptions:NextAuthOptions =  {
             name:"Credentials",
 
             credentials:{
-                email:{label:"username",type:'text',placeholder:'abc@123'},
+                identifier:{label:"Email/Username",placeholder:"email/username",type:"text"},
                 password:{label:"password",type:"password"}
             },
             async authorize(credentials:any):Promise<any>{
@@ -19,14 +19,16 @@ export const authOptions:NextAuthOptions =  {
                 try {
                     const user = await UserModel.findOne({
                         $or:[
-                            {email:credentials.identifier.email},
-                            {username:credentials.identifier.username}
+                            {email:credentials.identifier},
+                            {username:credentials.identifier}
                         ]
                     })
                     if(!user){
+                        console.log("User not found")
                         throw new Error('No user found with this email/username')
                     }
                     if(!user.isVerified){
+                        console.log("User not verified")
                         throw new Error('Pls verify your account first before logging in')
                     }
 
@@ -36,9 +38,11 @@ export const authOptions:NextAuthOptions =  {
                         throw new Error("Incorrect password")
                     }
                     else{
+                        console.log("User getting returned?, maybe")
                         return user
                     }
                 } catch (error:any) {
+                    console.error("Error while signing in ",error)
                     throw new Error(error)
                 }
             }
