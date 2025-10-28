@@ -22,16 +22,17 @@ export async function GET(request:Request){
     const userId = new mongoose.Types.ObjectId(user._id)
     try {
         const messages = await UserModel.aggregate([
-            {$match:userId},
+            {$match:{_id:userId}},
             {$unwind:'$messages'},
             {$sort:{'messages.createdAt':-1}},
             {$group:{_id:'$_id',messages:{$push:'$messages'}}}
         ])
 
+        console.log(messages)
         if(!messages || messages.length === 0){
             return Response.json({
                 success:false,
-                message:"No messaged found"
+                message:"No messages found"
             },{
                 status:404
             })
