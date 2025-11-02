@@ -1,5 +1,5 @@
 import {google} from "@ai-sdk/google"
-import {streamText} from 'ai'
+import { streamText } from "ai";
 import { NextResponse } from "next/server"
 
 export async function POST(){
@@ -11,9 +11,7 @@ export async function POST(){
             prompt: prompt,
         });
 
-        const text = await result.text;
-        return new NextResponse(text);
-        
+        return result.toUIMessageStreamResponse()
     } catch (error) {
         console.log("Error while generating a reply from Gemini", error);
         return new NextResponse("Internal Server Error", { status: 500 });

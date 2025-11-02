@@ -106,7 +106,7 @@ const UserDashboard = () => {
 
         fetchMessages()
         fetchAcceptMessage()
-    }, [session?.user.username, toast, setValue, fetchAcceptMessage, fetchMessages])
+    }, [session, toast, setValue, fetchAcceptMessage, fetchMessages])
 
     const username = session?.user?.username
 
@@ -116,11 +116,11 @@ const UserDashboard = () => {
         setProfileUrl(url)
     }, [username])
 
-    const copyToClipboard = useCallback(async () => {
-        if (!profileUrl) return
+    const copyToClipboard = useCallback(() => {
+        if (!profileUrl) return toast.error("Profile URl is empty")
         try {
 
-            await navigator.clipboard.writeText(profileUrl);
+            navigator.clipboard.writeText(profileUrl);
 
             toast.success(
                 'URL Copied!', {
@@ -132,7 +132,7 @@ const UserDashboard = () => {
                 description: 'Could not copy URL to clipboard.',
             });
         }
-    }, [username, toast]);
+    }, [profileUrl]);
 
 
     if (!session || !session.user) {
@@ -192,7 +192,8 @@ const UserDashboard = () => {
                 {messages.length > 0 ? (
                     messages.map((message, index) => (
                         <MessageCard
-                            //   key={message._id}
+                        //@ts-ignore
+                            key={message._id}
                             message={message}
                             onMessageDelete={handleDeleteMessage}
                         />

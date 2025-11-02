@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import NavBar from "../../components/Navbar"
 export default function DashboardLayout({
   children,
 }: {
@@ -7,6 +8,7 @@ export default function DashboardLayout({
   return (
     <>
       <Toaster richColors />
+      <NavBar />
       {children}
     </>
   )
