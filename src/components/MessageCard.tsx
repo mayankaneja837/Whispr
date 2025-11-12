@@ -3,7 +3,7 @@ import {
     Card,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "../components/ui/card"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,7 +14,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "../components/ui/alert-dialog"
 import { Button } from "./ui/button"
 import {X} from 'lucide-react'
 import { Message } from "../models/User"
