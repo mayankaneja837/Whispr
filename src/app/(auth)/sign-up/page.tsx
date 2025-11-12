@@ -5,13 +5,13 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as z from 'zod'
 import {useDebounceCallback} from 'usehooks-ts'
-import { signupSchema } from "@/schemas/signupSchema"
+import { signupSchema } from "../../../schemas/signupSchema"
 import axios,{AxiosError} from 'axios'
-import { ApiResponse } from "@/types/ApiResponse"
+import { ApiResponse } from "../../../types/ApiResponse"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
+import { Input } from "../../../components/ui/input"
+import { Button } from "../../../components/ui/button"
+import { Spinner } from "../../../components/ui/spinner"
 
 export default function SignUpComponent(){
   const [username,setUsername] = useState("")

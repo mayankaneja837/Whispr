@@ -2,18 +2,18 @@
 import React, { useState,useEffect } from "react";
 import { toast } from "sonner"
 import { useForm } from 'react-hook-form'
-import { MessageSchema } from "@/schemas/MessageSchema";
+import { MessageSchema } from "../../../schemas/MessageSchema"
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "../../../components/ui/textarea"
 import { useParams } from "next/navigation";
 import { useCompletion } from "@ai-sdk/react"
-import { Form, FormField, FormItem,FormLabel,FormControl,FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem,FormLabel,FormControl,FormMessage } from "../../../components/ui/form"
+import { Button } from "../../../components/ui/button"
 import { Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader } from "../../../components/ui/card"
+import { Separator } from "../../../components/ui/separator"
 import Link from "next/link";
 
 const specialChar = "||"
