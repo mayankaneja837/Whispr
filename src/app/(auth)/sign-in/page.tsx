@@ -1,15 +1,15 @@
 "use client"
-import { signInSchema } from "@/schemas/signinSchema"
+import { signInSchema } from "../../../schemas/signinSchema"
 import * as React from "react"
 import * as z from 'zod'
-import { Form } from "@/components/ui/form"
+import { Form } from "../../../components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { FormField,FormControl,FormDescription,FormMessage,FormItem,FormLabel} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Input } from "../../../components/ui/input"
+import { Button } from "../../../components/ui/button"
 
 const SigninComponent = ()=>{
   const router = useRouter()
