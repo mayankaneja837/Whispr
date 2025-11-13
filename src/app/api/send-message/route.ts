@@ -1,7 +1,6 @@
-import UserModel from "@/models/User";
-import dbConnect from "@/lib/db";
-import { MessageSchema } from "@/schemas/MessageSchema";
-import { Message } from "@/models/User";
+import UserModel from "../../../models/User"
+import dbConnect from "../../../lib/db"
+import { Message } from "../../../models/User"
 
 export async function POST(request:Request){
     await dbConnect()

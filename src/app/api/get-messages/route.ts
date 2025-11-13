@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import dbConnect from "@/lib/db";
-import UserModel from "@/models/User";
+import dbConnect from "../../../lib/db"
+import UserModel from "../../../models/User"
 import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose from "mongoose";
 
