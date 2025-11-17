@@ -38,6 +38,7 @@ export async function POST(request:Request){
             status:200
         })
     } catch (error) {
+        console.error("Error sending the messages to the user",error)
         return Response.json({
             success:false,
             message:"Error sending the messages to the user"

@@ -45,6 +45,7 @@ export async function POST(request: Request) {
             status: 200
         })
     } catch (error) {
+        console.error("Error in updating the user",error)
         return Response.json({
             success: false,
             message: "Error querying the user"
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
     }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
     await dbConnect()
 
     const session = await getServerSession(authOptions)
@@ -88,6 +89,7 @@ export async function GET(request: Request) {
             status: 200
         })
     } catch (error) {
+        console.error("Error in getting the user",error)
         return Response.json({
             success: false,
             message: "Error querying the user"

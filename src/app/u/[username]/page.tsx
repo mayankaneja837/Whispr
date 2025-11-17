@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { MessageSchema } from "../../../schemas/MessageSchema"
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { Textarea } from "../../../components/ui/textarea"
 import { useParams } from "next/navigation";
 import { useCompletion } from "@ai-sdk/react"
@@ -37,7 +37,6 @@ const SendMessageComponent = () => {
         completion,
         isLoading: isSuggestLoading,
         error,
-        setCompletion
     } = useCompletion({
         api: '/api/suggest-messages',
         initialCompletion: initialMessaging
@@ -69,7 +68,7 @@ const SendMessageComponent = () => {
             form.reset({ ...form.getValues(), content: '' })
 
         } catch (error) {
-            const axiosError = error as AxiosError
+            console.error("Error in sending the message",error)
             toast.error("Error", {
                 description: "Failed to sent the message"
             })
@@ -82,7 +81,7 @@ const SendMessageComponent = () => {
         try {
             complete('')
         } catch (error) {
-            console.error("Error while fetching suggest-messages")
+            console.error("Error while fetching suggest-messages",error)
             toast.error("Error", {
                 description: "Error while fetching"
             })

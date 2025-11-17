@@ -4,7 +4,7 @@ import UserModel from "../../../models/User"
 import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose from "mongoose";
 
-export async function GET(request:Request){
+export async function GET(){
     await dbConnect()
 
     const session = await getServerSession(authOptions)
@@ -43,6 +43,7 @@ export async function GET(request:Request){
             messages: messages[0].messages
         })
     } catch (error) {
+        console.error("Error in getting the messages from the user",error)
         return Response.json({
             success:false,
             message:"Error getting the messages from the user"

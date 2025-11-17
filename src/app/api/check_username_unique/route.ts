@@ -1,4 +1,4 @@
-import {success, z} from 'zod'
+import {z} from 'zod'
 import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import { usernameValidation } from "../../../schemas/signupSchema"
@@ -18,7 +18,6 @@ export async function GET(request:Request){
         const result = usernameQuerySchema.safeParse(queryParam)
         console.log(result)
         if(!result.success){
-            const usernameErrors= result.error || []
             return Response.json({
                 success:false,
                 message:"Username is not available to use"

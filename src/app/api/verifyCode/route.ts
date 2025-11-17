@@ -52,6 +52,7 @@ export async function POST(request:Request){
             })
         }
     } catch (error) {
+        console.error("Error checking the code",error)
         return Response.json({
             success:false,
             message:"Error checking the code"

@@ -1,9 +1,9 @@
 import {Message} from "../models/User"
 
 export interface ApiResponse{
-    success: Boolean,
+    success: boolean,
     message: string,
     statuscode?: number,
-    isAcceptingMessage?:Boolean,
+    isAcceptingMessage?:boolean,
     messages?:[Message]
 }

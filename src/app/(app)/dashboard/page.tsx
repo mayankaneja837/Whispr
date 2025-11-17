@@ -4,7 +4,7 @@ import { Separator } from "../../../components/./ui/separator"
 import { Switch } from "../../../components/ui/switch"
 import { Loader2, RefreshCcw } from "lucide-react"
 import MessageCard from "../../../components/MessageCard"
-import { Message, User } from "../../../models/User"
+import { Message } from "../../../models/User"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSession } from "next-auth/react"
@@ -42,14 +42,14 @@ const UserDashboard = () => {
             const response = await axios.get<ApiResponse>('/api/accept-messages')
             setValue("acceptMessages", Boolean(response.data.isAcceptingMessage))
         } catch (error) {
-            const axiosError = error as AxiosError
+            console.error("Error in fetching the acceptMessage state of the user",error)
             toast.error("Axios Error", {
                 description: "Error in fetching the acceptMessage state of the user"
             })
         } finally {
             setIsSwitchLoading(false)
         }
-    }, [setValue, toast])
+    }, [setValue])
 
 
     const fetchMessages = useCallback(async () => {
@@ -72,12 +72,12 @@ const UserDashboard = () => {
             setIsLoading(false)
             setIsSwitchLoading(false)
         }
-    }, [setMessages, setIsLoading, toast])
+    }, [setMessages, setIsLoading])
 
     const handleSwitchChange = async () => {
         try {
             const newValue = !acceptMessages
-            const response = await axios.post<ApiResponse>('/api/accept-messages', {
+            await axios.post<ApiResponse>('/api/accept-messages', {
                 acceptMessages: !acceptMessages
             })
             setValue("acceptMessages", !acceptMessages)
@@ -106,7 +106,7 @@ const UserDashboard = () => {
 
         fetchMessages()
         fetchAcceptMessage()
-    }, [session, toast, setValue, fetchAcceptMessage, fetchMessages])
+    }, [session, setValue, fetchAcceptMessage, fetchMessages])
 
     const username = session?.user?.username
 
@@ -127,6 +127,7 @@ const UserDashboard = () => {
                 description: 'Profile URL has been copied to clipboard.',
             });
         } catch (error) {
+            console.error(error)
             toast(
                 'Copy Failed', {
                 description: 'Could not copy URL to clipboard.',
@@ -190,10 +191,9 @@ const UserDashboard = () => {
             </Button>
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                 {messages.length > 0 ? (
-                    messages.map((message, index) => (
+                    messages.map((message) => (
                         <MessageCard
-                        //@ts-ignore
-                            key={message._id}
+                            key={String(message._id)}
                             message={message}
                             onMessageDelete={handleDeleteMessage}
                         />

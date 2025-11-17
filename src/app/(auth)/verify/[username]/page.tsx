@@ -11,7 +11,7 @@ import { verifySchema } from "../../../../schemas/verifySchema"
 import { ApiResponse } from "../../../../types/ApiResponse"
 import axios, { AxiosError } from "axios";
 
-const verifyComponent = ()=>{
+const VerifyComponent = ()=>{
 
     const router = useRouter()
     const params = useParams()
@@ -81,4 +81,4 @@ const verifyComponent = ()=>{
     )
 }
 
-export default verifyComponent
+export default VerifyComponent

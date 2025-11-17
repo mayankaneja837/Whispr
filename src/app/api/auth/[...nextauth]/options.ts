@@ -4,6 +4,17 @@ import bcrypt from "bcryptjs";
 import dbConnect from "../../../../lib/db"
 import UserModel from "../../../../models/User"
 
+type Credentials = {
+    identifier?:string,
+    password:string
+}
+
+type AuthUser = {
+    id?:string,
+    isVerified?:boolean,
+    isUserAcceptingMessages?:boolean,
+    username?:string
+}
 export const authOptions:NextAuthOptions =  {
     providers:[
         CredentialsProvider({
@@ -14,8 +25,11 @@ export const authOptions:NextAuthOptions =  {
                 identifier:{label:"Email/Username",placeholder:"email/username",type:"text"},
                 password:{label:"password",type:"password"}
             },
-            async authorize(credentials:any):Promise<any>{
+
+            async authorize(credentials:Credentials | undefined):Promise<AuthUser | null>{
                 await dbConnect()
+
+                if(!credentials) return null
                 try {
                     const user = await UserModel.findOne({
                         $or:[
@@ -39,11 +53,11 @@ export const authOptions:NextAuthOptions =  {
                     }
                     else{
                         console.log("User getting returned?, maybe")
-                        return user
+                        return user as AuthUser
                     }
-                } catch (error:any) {
+                } catch (error) {
                     console.error("Error while signing in ",error)
-                    throw new Error(error)
+                    return null
                 }
             }
         })
@@ -51,9 +65,9 @@ export const authOptions:NextAuthOptions =  {
     callbacks:{
         async jwt({token,user}) {
             if(user){
-                token._id = user._id,
-                token.isVerified = user.isVerified,
-                token.isUserAcceptingMessages = user.isUserAcceptingMessages,
+                token._id = user.id
+                token.isVerified = user.isVerified
+                token.isUserAcceptingMessages = user.isUserAcceptingMessages
                 token.username = user.username
             }
             return token
@@ -61,9 +75,9 @@ export const authOptions:NextAuthOptions =  {
 
         async session({session,token}){
             if(token){
-                session.user._id = token._id,
-                session.user.isVerified = token.isVerified,
-                session.user.isUserAcceptingMessages = token.isUserAcceptingMessages,
+                session.user._id = token._id
+                session.user.isVerified = token.isVerified
+                session.user.isUserAcceptingMessages = token.isUserAcceptingMessages
                 session.user.username = token.username
             }
             return session

@@ -1,12 +1,12 @@
 import dbConnect from "../../../../lib/db"
 import UserModel from "../../../../models/User"
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
-export async function DELETE(request:Request,{params}:{params:{messageId:string}}){
+export async function DELETE(request:NextRequest,{params}:{params:Promise<{messageId:string}>}){
     await dbConnect()
-    const messageId = params.messageId
+    const messageId = (await params).messageId
     const session = await getServerSession(authOptions)
 
     if(!session || !session.user){
@@ -36,6 +36,7 @@ export async function DELETE(request:Request,{params}:{params:{messageId:string}
             status:200
         })
     } catch (error) {
+        console.error("Error in deleting message from the database",error)
         return NextResponse.json({
             message:"Error in deleting message from the database"
         },{

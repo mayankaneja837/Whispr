@@ -57,7 +57,7 @@ export default function SignUpComponent(){
   const onSubmit = async (data:z.infer<typeof signupSchema>)=>{
     setIsSubmitting(true)
     try {
-      const response = await axios.post(`/api/signup`,data)
+      await axios.post(`/api/signup`,data)
 
       router.replace(`/verify/${username}`)
       setIsSubmitting(false)
