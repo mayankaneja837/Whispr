@@ -10,7 +10,7 @@ import { signIn } from "next-auth/react"
 import { FormField,FormControl,FormMessage,FormItem,FormLabel} from "../../../components/ui/form"
 import { Input } from "../../../components/ui/input"
 import { Button } from "../../../components/ui/button"
-
+import {logger} from "../../../lib/logger"
 const SigninComponent = ()=>{
   const router = useRouter()
 
@@ -27,9 +27,8 @@ const SigninComponent = ()=>{
       identifier : data.identifier,
       password : data.password
     })
-    console.log(result?.error)
     if(result?.error){
-      console.log("Error while signing in")
+      logger.log("Error while signing in")
     }
 
     if(result?.url){

@@ -13,6 +13,7 @@ import axios, { AxiosError } from "axios"
 import { Button } from "../../../components/ui/button"
 import { ApiResponse } from "../../../types/ApiResponse"
 import { toast } from "sonner"
+import {logger} from "../../../lib/logger"
 
 const UserDashboard = () => {
     const [messages, setMessages] = useState<Message[]>([])
@@ -42,7 +43,7 @@ const UserDashboard = () => {
             const response = await axios.get<ApiResponse>('/api/accept-messages')
             setValue("acceptMessages", Boolean(response.data.isAcceptingMessage))
         } catch (error) {
-            console.error("Error in fetching the acceptMessage state of the user",error)
+            logger.error("Error in fetching the accept State of the user",error)
             toast.error("Axios Error", {
                 description: "Error in fetching the acceptMessage state of the user"
             })
@@ -64,7 +65,7 @@ const UserDashboard = () => {
             })
         } catch (error) {
             const axiosError = error as AxiosError
-            console.log(axiosError)
+            logger.log(axiosError)
             toast.error("Error", {
                 description: "Error in fetching the messages"
             })
@@ -92,7 +93,7 @@ const UserDashboard = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError
-            console.log("Error from handleSwitchChange", axiosError)
+            logger.error("Error from handleSwitchChange", axiosError)
             toast.error("Error", {
                 description: "Error in changing the switch"
             })
@@ -127,7 +128,7 @@ const UserDashboard = () => {
                 description: 'Profile URL has been copied to clipboard.',
             });
         } catch (error) {
-            console.error(error)
+            logger.error("Error in copying the profile URL", error)
             toast(
                 'Copy Failed', {
                 description: 'Could not copy URL to clipboard.',
@@ -142,8 +143,6 @@ const UserDashboard = () => {
         </div>
     }
 
-
-    console.log("AcceptMessages",acceptMessages)
     return (
         <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
             <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>

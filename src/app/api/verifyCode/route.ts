@@ -1,6 +1,6 @@
 import dbConnect from '../../../lib/db'
 import UserModel from "../../../models/User"
-
+import { logger } from "../../../lib/logger";
 export async function POST(request:Request){
     await dbConnect()
 
@@ -52,7 +52,7 @@ export async function POST(request:Request){
             })
         }
     } catch (error) {
-        console.error("Error checking the code",error)
+        logger.error("Error checking the code",error)
         return Response.json({
             success:false,
             message:"Error checking the code"

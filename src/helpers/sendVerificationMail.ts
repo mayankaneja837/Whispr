@@ -1,6 +1,7 @@
 import {resend} from "../lib/resend"
 import { EmailTemplate } from "../../templates/verificationEmailTemplate"
 import { ApiResponse } from "../types/ApiResponse"
+import {logger} from "../lib/logger"
 
 export async function SendVerificationEmail(
     email: string,
@@ -14,11 +15,11 @@ export async function SendVerificationEmail(
             subject:'verification email',
             react:EmailTemplate({username,verifyCode})
         })
-        console.log("Email response generated")
+        // Error handling here
         return {success:true,message:"Verification email sent successfully"}
 
     } catch (emailError) {
-        console.error("error sending verification mail",emailError)
+        logger.error("error sending verification mail",emailError)
         return {success:false,message:"Failed to send verification email",//statuscode:400}
         }
 }

@@ -3,7 +3,7 @@ import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose from "mongoose";
-
+import {logger} from "../../../lib/logger"
 export async function GET(){
     await dbConnect()
 
@@ -28,7 +28,6 @@ export async function GET(){
             {$group:{_id:'$_id',messages:{$push:'$messages'}}}
         ])
 
-        console.log(messages)
         if(!messages || messages.length === 0){
             return Response.json({
                 success:false,
@@ -43,7 +42,7 @@ export async function GET(){
             messages: messages[0].messages
         })
     } catch (error) {
-        console.error("Error in getting the messages from the user",error)
+        logger.error("Error in getting the messages from the user",error)
         return Response.json({
             success:false,
             message:"Error getting the messages from the user"

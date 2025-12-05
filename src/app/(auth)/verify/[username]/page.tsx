@@ -10,7 +10,7 @@ import * as z from "zod"
 import { verifySchema } from "../../../../schemas/verifySchema"
 import { ApiResponse } from "../../../../types/ApiResponse"
 import axios, { AxiosError } from "axios";
-
+import {logger} from "../../../../lib/logger"
 const VerifyComponent = ()=>{
 
     const router = useRouter()
@@ -30,15 +30,14 @@ const VerifyComponent = ()=>{
             code:data.verifyCode
         })
         if(response.data.success){
-            console.log("Verification complete")
             router.replace('/sign-up')
         }
         else{
-            console.error("Error in verifying the user")
+            logger.error("Error in verifying the user")
         }
     } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>
-        console.log(axiosError.response?.data.message)
+        logger.log(axiosError.response?.data.message)
     }
    }
 

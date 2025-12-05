@@ -15,6 +15,8 @@ import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "../../../components/ui/card"
 import { Separator } from "../../../components/ui/separator"
 import Link from "next/link";
+import {logger} from "../../../lib/logger"
+import { LogARg } from "../../../lib/logger";
 
 const specialChar = "||"
 
@@ -68,7 +70,8 @@ const SendMessageComponent = () => {
             form.reset({ ...form.getValues(), content: '' })
 
         } catch (error) {
-            console.error("Error in sending the message",error)
+            // Error handling here
+            logger.error("Error while sending message",error)
             toast.error("Error", {
                 description: "Failed to sent the message"
             })
@@ -81,18 +84,14 @@ const SendMessageComponent = () => {
         try {
             complete('')
         } catch (error) {
-            console.error("Error while fetching suggest-messages",error)
+            logger.error("Error while fetching suggested messages",error)// Error handling here
             toast.error("Error", {
                 description: "Error while fetching"
             })
         }
     }
 
-    //debugging
     useEffect(() => {
-    console.log('Completion changed:', completion);
-    console.log('Parsed messages:', parsedMessages(completion));
-    console.log('Is loading:', isSuggestLoading);
 }, [completion, isSuggestLoading])
 
     return <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">

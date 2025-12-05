@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import { authOptions } from "../auth/[...nextauth]/options";
+import {logger} from "../../../lib/logger"
 
 export async function POST(request: Request) {
     await dbConnect()
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
             status: 200
         })
     } catch (error) {
-        console.error("Error in updating the user",error)
+        logger.error("Error in updating the user",error)
         return Response.json({
             success: false,
             message: "Error querying the user"
@@ -74,14 +75,12 @@ export async function GET() {
     try {
         const foundUser = await UserModel.findById(userId)
         if (!foundUser) {
-            console.log("No user found")
+            // Better logging? Maybe
             return Response.json({
                 message: "No user found"
             })
         }
 
-        console.log("User with the given id is found")
-        console.log(foundUser.isUserAcceptingMessages)
         return Response.json({
             success: true,
             isAcceptingMessage: foundUser.isUserAcceptingMessages
@@ -89,7 +88,7 @@ export async function GET() {
             status: 200
         })
     } catch (error) {
-        console.error("Error in getting the user",error)
+        logger.error("Error in getting the user",error)
         return Response.json({
             success: false,
             message: "Error querying the user"

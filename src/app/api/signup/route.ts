@@ -2,7 +2,7 @@ import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import bcrypt from "bcryptjs";
 import { SendVerificationEmail } from "../../../helpers/sendVerificationMail"
-
+import { logger } from "../../../lib/logger";
 export async function POST(request:Request){
     await dbConnect()
 
@@ -20,7 +20,7 @@ export async function POST(request:Request){
         }
 
         if(!existingVerifiedUser){
-            console.log("No existing verified user existis, Proceeding with the function call")
+            //Error handling here
         }
 
         const existingUserByEmail = await UserModel.findOne({
@@ -45,7 +45,7 @@ export async function POST(request:Request){
                 existingUserByEmail.verifyCodeExpiry = new Date(Date.now()+360000)
                 await existingUserByEmail.save()
 
-                console.log("Existing user updated")
+                // Error handling here
             }
         }
         else{
@@ -64,16 +64,11 @@ export async function POST(request:Request){
                 messages: []
             })
             await newUser.save()
-            console.log("New user saved")
+            // Better logging
         }
 
         const emailResponse = await SendVerificationEmail(email,username,verifyCode)
 
-
-        if(emailResponse){
-            console.log("Email Response exists")
-            console.log(emailResponse)
-        }
 
         if(!emailResponse.success){
             return Response.json({
@@ -91,7 +86,7 @@ export async function POST(request:Request){
             status:200
         })
     } catch (error) {
-        console.error("Error registering user",error)
+        logger.error("Error registering user",error)
         return Response.json({
             success:false,
             message:"Error registering user"

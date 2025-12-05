@@ -3,7 +3,7 @@ import { NextAuthOptions } from "next-auth";
 import bcrypt from "bcryptjs";
 import dbConnect from "../../../../lib/db"
 import UserModel from "../../../../models/User"
-
+import {logger} from "../../../../lib/logger"
 type Credentials = {
     identifier?:string,
     password:string
@@ -38,11 +38,11 @@ export const authOptions:NextAuthOptions =  {
                         ]
                     })
                     if(!user){
-                        console.log("User not found")
+                        //Better Error handling
                         throw new Error('No user found with this email/username')
                     }
                     if(!user.isVerified){
-                        console.log("User not verified")
+                        // better Error handling
                         throw new Error('Pls verify your account first before logging in')
                     }
 
@@ -52,11 +52,11 @@ export const authOptions:NextAuthOptions =  {
                         throw new Error("Incorrect password")
                     }
                     else{
-                        console.log("User getting returned?, maybe")
+                        // Better Logging?, Maybe?
                         return user as AuthUser
                     }
                 } catch (error) {
-                    console.error("Error while signing in ",error)
+                    logger.error("Error while signing in ",error)
                     return null
                 }
             }

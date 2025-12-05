@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../../../components/ui/input"
 import { Button } from "../../../components/ui/button"
 import { Spinner } from "../../../components/ui/spinner"
+import {logger} from "../../../lib/logger"
 
 export default function SignUpComponent(){
   const [username,setUsername] = useState("")
@@ -62,7 +63,7 @@ export default function SignUpComponent(){
       router.replace(`/verify/${username}`)
       setIsSubmitting(false)
     } catch (error) {
-      console.error("Error in submitting user form",error)
+      logger.error("Error in submitting user form",error)
       setIsSubmitting(false)
     }
   }

@@ -2,7 +2,7 @@ import {z} from 'zod'
 import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import { usernameValidation } from "../../../schemas/signupSchema"
-
+import {logger} from "../../../lib/logger"
 const usernameQuerySchema = z.object({
     username: usernameValidation
 })
@@ -16,7 +16,6 @@ export async function GET(request:Request){
             username : searchParams.get('username')
         }
         const result = usernameQuerySchema.safeParse(queryParam)
-        console.log(result)
         if(!result.success){
             return Response.json({
                 success:false,
@@ -50,7 +49,7 @@ export async function GET(request:Request){
             })
         }
     } catch (error) {
-        console.error("Error checking username",error)
+        logger.error("Error checking username",error)
         return Response.json({
             success:false,
             message:"Error checking username"
