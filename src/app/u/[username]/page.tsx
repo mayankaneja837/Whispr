@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { MessageSchema } from "../../../schemas/MessageSchema"
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Textarea } from "../../../components/ui/textarea"
 import { useParams } from "next/navigation";
 import { useCompletion } from "@ai-sdk/react"
@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader } from "../../../components/ui/card"
 import { Separator } from "../../../components/ui/separator"
 import Link from "next/link";
 import {logger} from "../../../lib/logger"
-import { LogARg } from "../../../lib/logger";
+import apiClient from "../../../lib/axios"
 
 const specialChar = "||"
 
@@ -58,7 +58,7 @@ const SendMessageComponent = () => {
     const onSubmit = async (data: z.infer<typeof MessageSchema>) => {
         setIsLoading(true)
         try {
-            const response = await axios.post('/api/send-message', {
+            const response = await apiClient.post('/send-message', {
                 username: username,
                 ...data
             })
@@ -70,11 +70,10 @@ const SendMessageComponent = () => {
             form.reset({ ...form.getValues(), content: '' })
 
         } catch (error) {
-            // Error handling here
             logger.error("Error while sending message",error)
-            toast.error("Error", {
-                description: "Failed to sent the message"
-            })
+            // toast.error("Error", {
+            //     description: "Failed to sent the message"
+            // })
         } finally {
             setIsLoading(false)
         }
@@ -85,9 +84,9 @@ const SendMessageComponent = () => {
             complete('')
         } catch (error) {
             logger.error("Error while fetching suggested messages",error)// Error handling here
-            toast.error("Error", {
-                description: "Error while fetching"
-            })
+            // toast.error("Error", {
+            //     description: "Error while fetching"
+            // })
         }
     }
 

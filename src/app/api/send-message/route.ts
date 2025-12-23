@@ -2,30 +2,21 @@ import UserModel from "../../../models/User"
 import dbConnect from "../../../lib/db"
 import { Message } from "../../../models/User"
 import {logger} from "../../../lib/logger"
+import { apiError } from "../../../lib/apiError"
 
 export async function POST(request:Request){
     await dbConnect()
 
-    const {username,content} =await request.json()
+    const {username,content} = await request.json()
 
     try {
         const user = await UserModel.findOne({username})
         if(!user){
-            return Response.json({
-                success:false,
-                message:"User not found"
-            },{
-                status:404
-            })
+            return apiError(404,"User not found")
         }
 
         if(!user.isUserAcceptingMessages){
-            return Response.json({
-                success:false,
-                message:"User is not accepting messages"
-            },{
-                status:403
-            })
+            return apiError(403,"User is not accepting messages")
         }
 
         const newMessage = {content,createdAt:new Date()}
@@ -40,11 +31,6 @@ export async function POST(request:Request){
         })
     } catch (error) {
         logger.error("Error sending the messages to the user",error)
-        return Response.json({
-            success:false,
-            message:"Error sending the messages to the user"
-        },{
-            status:500
-        })
+        return apiError(500,"Internal Server error in sending message to the user")
     }
 }

@@ -4,6 +4,9 @@ import UserModel from "../../../models/User"
 import { authOptions } from "../auth/[...nextauth]/options";
 import mongoose from "mongoose";
 import {logger} from "../../../lib/logger"
+import { apiError } from "../../../lib/apiError";
+
+
 export async function GET(){
     await dbConnect()
 
@@ -11,12 +14,7 @@ export async function GET(){
     const user = session?.user
 
     if(!user){
-        return Response.json({
-            success:false,
-            message:"User is not logged in"
-        },{
-            status:404
-        })
+        return apiError(401,"User is not logged in")
     }
 
     const userId = new mongoose.Types.ObjectId(user._id)
@@ -29,12 +27,7 @@ export async function GET(){
         ])
 
         if(!messages || messages.length === 0){
-            return Response.json({
-                success:false,
-                message:"No messages found"
-            },{
-                status:404
-            })
+            return apiError(404,"No messages found")
         }
 
         return Response.json({
@@ -43,12 +36,7 @@ export async function GET(){
         })
     } catch (error) {
         logger.error("Error in getting the messages from the user",error)
-        return Response.json({
-            success:false,
-            message:"Error getting the messages from the user"
-        },{
-            status:500
-        })
+        return apiError(500,"Internal Server error in fetching Messages")
     }
 
 }

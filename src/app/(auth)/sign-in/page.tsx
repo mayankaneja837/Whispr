@@ -11,6 +11,9 @@ import { FormField,FormControl,FormMessage,FormItem,FormLabel} from "../../../co
 import { Input } from "../../../components/ui/input"
 import { Button } from "../../../components/ui/button"
 import {logger} from "../../../lib/logger"
+import { toast } from "sonner"
+
+
 const SigninComponent = ()=>{
   const router = useRouter()
 
@@ -21,6 +24,7 @@ const SigninComponent = ()=>{
       password: ''
     }
   })
+
   const onSubmit = async(data:z.infer<typeof signInSchema>) =>{
     const result = await signIn('credentials',{
       redirect:false,
@@ -29,6 +33,8 @@ const SigninComponent = ()=>{
     })
     if(result?.error){
       logger.log("Error while signing in")
+      toast.error(result?.error || "Login Failed")
+      return 
     }
 
     if(result?.url){

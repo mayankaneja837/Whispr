@@ -3,6 +3,8 @@ import UserModel from "../../../models/User"
 import bcrypt from "bcryptjs";
 import { SendVerificationEmail } from "../../../helpers/sendVerificationMail"
 import { logger } from "../../../lib/logger";
+import { apiError } from "../../../lib/apiError";
+
 export async function POST(request:Request){
     await dbConnect()
 
@@ -13,14 +15,7 @@ export async function POST(request:Request){
             isVerified:true
         })
         if(existingVerifiedUser){
-            return Response.json({
-                success:false,
-                message:"Username is already taken"
-            },{status:404})
-        }
-
-        if(!existingVerifiedUser){
-            //Error handling here
+            return apiError(409,"User already exists")
         }
 
         const existingUserByEmail = await UserModel.findOne({
@@ -30,12 +25,7 @@ export async function POST(request:Request){
         const verifyCode = Math.floor(100000 + Math.random()*900000).toString()
         if(existingUserByEmail){
             if(existingUserByEmail.isVerified){
-                return Response.json({
-                    success:false,
-                    message:"User is already verified"
-                },{
-                    status:404
-                })
+                return apiError(409,"User is already verified")
             }
             else{
                 existingUserByEmail.username = username
@@ -45,7 +35,6 @@ export async function POST(request:Request){
                 existingUserByEmail.verifyCodeExpiry = new Date(Date.now()+360000)
                 await existingUserByEmail.save()
 
-                // Error handling here
             }
         }
         else{
@@ -64,19 +53,13 @@ export async function POST(request:Request){
                 messages: []
             })
             await newUser.save()
-            // Better logging
         }
 
         const emailResponse = await SendVerificationEmail(email,username,verifyCode)
 
 
         if(!emailResponse.success){
-            return Response.json({
-                success:false,
-                message:"trouble sending verification email to the user"
-            },{
-                status:500
-            })
+            return apiError(500,"Internal Server error in sending verification email to the user")
         }
 
         return Response.json({
@@ -87,11 +70,6 @@ export async function POST(request:Request){
         })
     } catch (error) {
         logger.error("Error registering user",error)
-        return Response.json({
-            success:false,
-            message:"Error registering user"
-        },{
-            status:500
-        })
+        return apiError(500,"Internal Server error in signing-up the user")
     }
 }

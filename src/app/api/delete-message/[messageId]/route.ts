@@ -4,17 +4,15 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import {logger} from "../../../../lib/logger"
+import { apiError } from "../../../../lib/apiError";
+
 export async function DELETE(request:NextRequest,{params}:{params:Promise<{messageId:string}>}){
     await dbConnect()
     const messageId = (await params).messageId
     const session = await getServerSession(authOptions)
 
     if(!session || !session.user){
-        return NextResponse.json({
-            message:"User is not authenticated",
-        },{
-            status:401
-        })
+        return apiError(401,"User is not authenticated")
     }
     const userId = session.user._id
     try {
@@ -23,12 +21,9 @@ export async function DELETE(request:NextRequest,{params}:{params:Promise<{messa
             {$pull:{messages:{_id: (messageId)}}}
         )
         if(response.modifiedCount === 0){
-            return NextResponse.json({
-                message:"No message deleted from the database"
-            },{
-                status:404
-            })
+            return apiError(404,"No message deleted from the database")
         }
+
         return NextResponse.json({
             success:true,
             message:"Message deleted from the database"
@@ -37,10 +32,6 @@ export async function DELETE(request:NextRequest,{params}:{params:Promise<{messa
         })
     } catch (error) {
         logger.error("Error in deleting message from the database",error)
-        return NextResponse.json({
-            message:"Error in deleting message from the database"
-        },{
-            status:500
-        })
+        return apiError(500,"Internal Server error in deleting message from the database")
     }
 }

@@ -3,6 +3,8 @@ import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import { usernameValidation } from "../../../schemas/signupSchema"
 import {logger} from "../../../lib/logger"
+import { apiError } from '../../../lib/apiError'
+
 const usernameQuerySchema = z.object({
     username: usernameValidation
 })
@@ -17,12 +19,7 @@ export async function GET(request:Request){
         }
         const result = usernameQuerySchema.safeParse(queryParam)
         if(!result.success){
-            return Response.json({
-                success:false,
-                message:"Username is not available to use"
-            },{
-                status:404
-            })
+            return apiError(422,"Username is not available to use")
         }
 
         const {username} = result.data
@@ -33,28 +30,18 @@ export async function GET(request:Request){
         })
 
         if(existingVerifiedUsername){
-            return Response.json({
-                success:false,
-                message:"USername already exists"
-            },{
-                status:400
-            })
+            return apiError(409,"Username already exists")
         }
         else{
             return Response.json({
                 success:true,
                 message:"Username available"
             },{
-                status:201
+                status:200
             })
         }
     } catch (error) {
         logger.error("Error checking username",error)
-        return Response.json({
-            success:false,
-            message:"Error checking username"
-        },{
-            status:500
-        })
+        return apiError(500,"Internal server error while checking the username")
     }
 }

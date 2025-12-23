@@ -11,6 +11,8 @@ import { verifySchema } from "../../../../schemas/verifySchema"
 import { ApiResponse } from "../../../../types/ApiResponse"
 import axios, { AxiosError } from "axios";
 import {logger} from "../../../../lib/logger"
+import apiClient from "../../../../lib/axios";
+
 const VerifyComponent = ()=>{
 
     const router = useRouter()
@@ -25,12 +27,12 @@ const VerifyComponent = ()=>{
 
    const onSubmit = async(data:z.infer<typeof verifySchema>)=>{
     try {
-        const response = await axios.post('/api/verifyCode',{
+        const response = await apiClient.post('/verifyCode',{
             username:params.username,
             code:data.verifyCode
         })
         if(response.data.success){
-            router.replace('/sign-up')
+            router.replace('/dashboard')
         }
         else{
             logger.error("Error in verifying the user")

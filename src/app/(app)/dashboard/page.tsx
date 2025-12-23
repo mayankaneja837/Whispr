@@ -9,11 +9,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSession } from "next-auth/react"
 import { acceptMessageSchema } from "../../../schemas/acceptMessageSchema"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import { Button } from "../../../components/ui/button"
 import { ApiResponse } from "../../../types/ApiResponse"
 import { toast } from "sonner"
 import {logger} from "../../../lib/logger"
+import apiClient from "../../../lib/axios"
 
 const UserDashboard = () => {
     const [messages, setMessages] = useState<Message[]>([])
@@ -40,13 +41,13 @@ const UserDashboard = () => {
     const fetchAcceptMessage = useCallback(async () => {
         setIsSwitchLoading(true)
         try {
-            const response = await axios.get<ApiResponse>('/api/accept-messages')
+            const response = await apiClient.get<ApiResponse>('/accept-messages')
             setValue("acceptMessages", Boolean(response.data.isAcceptingMessage))
         } catch (error) {
             logger.error("Error in fetching the accept State of the user",error)
-            toast.error("Axios Error", {
-                description: "Error in fetching the acceptMessage state of the user"
-            })
+            // toast.error("Axios Error", {
+            //     description: "Error in fetching the acceptMessage state of the user"
+            // })
         } finally {
             setIsSwitchLoading(false)
         }
@@ -58,7 +59,7 @@ const UserDashboard = () => {
         setIsSwitchLoading(false)
 
         try {
-            const response = await axios.get<ApiResponse>('/api/get-messages')
+            const response = await apiClient.get<ApiResponse>('/get-messages')
             setMessages(response.data.messages || [])
             toast.success("Messages Fetched", {
                 description: "Latest messages fetched"
@@ -66,9 +67,9 @@ const UserDashboard = () => {
         } catch (error) {
             const axiosError = error as AxiosError
             logger.log(axiosError)
-            toast.error("Error", {
-                description: "Error in fetching the messages"
-            })
+            // toast.error("Error", {
+            //     description: "Error in fetching the messages"
+            // })
         } finally {
             setIsLoading(false)
             setIsSwitchLoading(false)
@@ -78,7 +79,7 @@ const UserDashboard = () => {
     const handleSwitchChange = async () => {
         try {
             const newValue = !acceptMessages
-            await axios.post<ApiResponse>('/api/accept-messages', {
+            await apiClient.post<ApiResponse>('/accept-messages', {
                 acceptMessages: !acceptMessages
             })
             setValue("acceptMessages", !acceptMessages)
@@ -94,9 +95,9 @@ const UserDashboard = () => {
         } catch (error) {
             const axiosError = error as AxiosError
             logger.error("Error from handleSwitchChange", axiosError)
-            toast.error("Error", {
-                description: "Error in changing the switch"
-            })
+            // toast.error("Error", {
+            //     description: "Error in changing the switch"
+            // })
         }
     }
 
@@ -129,10 +130,10 @@ const UserDashboard = () => {
             });
         } catch (error) {
             logger.error("Error in copying the profile URL", error)
-            toast(
-                'Copy Failed', {
-                description: 'Could not copy URL to clipboard.',
-            });
+            // toast(
+            //     'Copy Failed', {
+            //     description: 'Could not copy URL to clipboard.',
+            // });
         }
     }, [profileUrl]);
 

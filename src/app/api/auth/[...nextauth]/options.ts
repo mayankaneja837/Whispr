@@ -38,11 +38,9 @@ export const authOptions:NextAuthOptions =  {
                         ]
                     })
                     if(!user){
-                        //Better Error handling
                         throw new Error('No user found with this email/username')
                     }
                     if(!user.isVerified){
-                        // better Error handling
                         throw new Error('Pls verify your account first before logging in')
                     }
 
@@ -52,12 +50,11 @@ export const authOptions:NextAuthOptions =  {
                         throw new Error("Incorrect password")
                     }
                     else{
-                        // Better Logging?, Maybe?
                         return user as AuthUser
                     }
                 } catch (error) {
-                    logger.error("Error while signing in ",error)
-                    return null
+                    logger.error("Unexpected error during sign-up",error)
+                    throw error
                 }
             }
         })

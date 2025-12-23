@@ -3,6 +3,7 @@ import dbConnect from "../../../lib/db"
 import UserModel from "../../../models/User"
 import { authOptions } from "../auth/[...nextauth]/options";
 import {logger} from "../../../lib/logger"
+import { apiError } from "../../../lib/apiError";
 
 export async function POST(request: Request) {
     await dbConnect()
@@ -11,12 +12,7 @@ export async function POST(request: Request) {
     const user = session?.user
 
     if (!user) {
-        return Response.json({
-            success: false,
-            message: "User is not logged in"
-        }, {
-            status: 400
-        })
+        return apiError(401,"User is not logged in")
     }
 
     const userId = user?._id
@@ -30,12 +26,7 @@ export async function POST(request: Request) {
         )
 
         if (!updatedUser) {
-            return Response.json({
-                success: false,
-                message: "Not able to update the user"
-            }, {
-                status: 401
-            })
+            return apiError(500,"Failed to update the user")
         }
 
         return Response.json({
@@ -47,12 +38,7 @@ export async function POST(request: Request) {
         })
     } catch (error) {
         logger.error("Error in updating the user",error)
-        return Response.json({
-            success: false,
-            message: "Error querying the user"
-        }, {
-            status: 404
-        })
+        return apiError(500,"Internal server error while updating the user")
     }
 }
 
@@ -63,22 +49,14 @@ export async function GET() {
     const user = session?.user
 
     if (!user) {
-        return Response.json({
-            success: false,
-            message: "User is not logged in"
-        }, {
-            status: 400
-        })
+        return apiError(401,"User is not logged in")
     }
 
     const userId = user._id
     try {
         const foundUser = await UserModel.findById(userId)
         if (!foundUser) {
-            // Better logging? Maybe
-            return Response.json({
-                message: "No user found"
-            })
+            return apiError(404,"User not found")
         }
 
         return Response.json({
@@ -89,11 +67,6 @@ export async function GET() {
         })
     } catch (error) {
         logger.error("Error in getting the user",error)
-        return Response.json({
-            success: false,
-            message: "Error querying the user"
-        }, {
-            status: 404
-        })
+        return apiError(500,"Internal server failure while fetching the user")
     }
 }

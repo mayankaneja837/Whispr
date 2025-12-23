@@ -13,6 +13,7 @@ import { Input } from "../../../components/ui/input"
 import { Button } from "../../../components/ui/button"
 import { Spinner } from "../../../components/ui/spinner"
 import {logger} from "../../../lib/logger"
+import apiClient from "../../../lib/axios"
 
 export default function SignUpComponent(){
   const [username,setUsername] = useState("")
@@ -39,7 +40,7 @@ export default function SignUpComponent(){
         setIsCheckingUsername(true)
         setUsernameMessage("")
         try {
-          const response = await axios.get(`/api/check_username_unique?username=${username}`)
+          const response = await apiClient.get(`/check_username_unique?username=${username}`)
           setUsernameMessage(response.data.message)
 
         } catch (error) {
@@ -58,7 +59,7 @@ export default function SignUpComponent(){
   const onSubmit = async (data:z.infer<typeof signupSchema>)=>{
     setIsSubmitting(true)
     try {
-      await axios.post(`/api/signup`,data)
+      await apiClient.post(`/signup`,data)
 
       router.replace(`/verify/${username}`)
       setIsSubmitting(false)

@@ -19,8 +19,8 @@ const Navbar = ()=>{
                         <><span>Welcome , user {user.username || user.email}</span>
                         <Button onClick={() => signOut()}>Logout</Button></>
                     ) : (
-                        <Link className="cursor-pointer" href='/sign-in'>
-                            <Button>Login</Button>
+                        <Link href='/sign-in'>
+                            <Button className="cursor-pointer">Login</Button>
                         </Link>
                     )
                 }

@@ -1,6 +1,8 @@
 import dbConnect from '../../../lib/db'
 import UserModel from "../../../models/User"
 import { logger } from "../../../lib/logger";
+import { apiError } from '../../../lib/apiError';
+
 export async function POST(request:Request){
     await dbConnect()
 
@@ -13,12 +15,7 @@ export async function POST(request:Request){
         })
 
         if(!user){
-            return Response.json({
-                sucesss:false,
-                message:"User with the entered username does not exist"
-            },{
-                status:404
-            })
+            return apiError(404,"User with the entered username does not exist")
         }
 
         const isCodeValid = user.verifyCode === code
@@ -36,28 +33,13 @@ export async function POST(request:Request){
             })
         }
         else if(!isCodeValid){
-            return Response.json({
-                success:false,
-                message:"Code entered is not valid"
-            },{
-                status:400
-            })
+            return apiError(400,"Code entered is not valid")
         }
         else{
-            return Response.json({
-                success:false,
-                message:"Code expired"
-            },{
-                status:400
-            })
+            return apiError(400,"Code expired")
         }
     } catch (error) {
         logger.error("Error checking the code",error)
-        return Response.json({
-            success:false,
-            message:"Error checking the code"
-        },{
-            status:404
-        })
+        return apiError(500,"Internal Server error in checking the code")
     }
 }
