@@ -9,7 +9,7 @@ import { Button } from "../../../../components/ui/button"
 import * as z from "zod"
 import { verifySchema } from "../../../../schemas/verifySchema"
 import { ApiResponse } from "../../../../types/ApiResponse"
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import {logger} from "../../../../lib/logger"
 import apiClient from "../../../../lib/axios";
 

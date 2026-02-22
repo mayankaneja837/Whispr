@@ -1,4 +1,4 @@
-import {resend} from "../lib/resend"
+import { getResend } from "../lib/resend"
 import { EmailTemplate } from "../../templates/verificationEmailTemplate"
 import { ApiResponse } from "../types/ApiResponse"
 import {logger} from "../lib/logger"
@@ -9,18 +9,18 @@ export async function SendVerificationEmail(
     verifyCode: string
 ):Promise<ApiResponse>{
     try {
+        const resend = getResend()
         await resend.emails.send({
-            from:"onboarding@resend.dev",
-            to:email,
-            subject:'verification email',
-            react:EmailTemplate({username,verifyCode})
+            from: "Whispr <noreply@mayankaneja.dev>",
+            to: email,
+            subject: 'verification email',
+            react: EmailTemplate({ username, verifyCode }),
         })
-        // Error handling here
-        return {success:true,message:"Verification email sent successfully"}
+
+        return { success: true, message: "Verification email sent successfully" }
 
     } catch (emailError) {
-        logger.error("error sending verification mail",emailError)
-        return {success:false,message:"Failed to send verification email",//statuscode:400}
-        }
-}
+        logger.error("error sending verification mail", emailError)
+        return { success: false, message: "Failed to send verification email" }
+    }
 }

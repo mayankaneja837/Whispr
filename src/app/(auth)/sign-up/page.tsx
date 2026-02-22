@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import * as z from 'zod'
 import {useDebounceCallback} from 'usehooks-ts'
 import { signupSchema } from "../../../schemas/signupSchema"
-import axios,{AxiosError} from 'axios'
+import { AxiosError } from 'axios'
 import { ApiResponse } from "../../../types/ApiResponse"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form"
 import { Input } from "../../../components/ui/input"

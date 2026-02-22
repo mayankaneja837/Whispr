@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { MessageSchema } from "../../../schemas/MessageSchema"
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
+// Using apiClient from lib/axios; remove unused axios import
 import { Textarea } from "../../../components/ui/textarea"
 import { useParams } from "next/navigation";
 import { useCompletion } from "@ai-sdk/react"
