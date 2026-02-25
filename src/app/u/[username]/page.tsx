@@ -166,7 +166,7 @@ const SendMessageComponent = () => {
 
             <div className=" flex flex-col text-center mb-4">
                 Get your message board
-                <Link href='/api/sign-in'>
+                <Link href='/sign-up'>
                 <Button className="mt-2">Create Account</Button>
                 </Link>
             </div>

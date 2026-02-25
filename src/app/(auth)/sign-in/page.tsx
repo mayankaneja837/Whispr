@@ -28,18 +28,21 @@ const SigninComponent = ()=>{
   const onSubmit = async(data:z.infer<typeof signInSchema>) =>{
     const result = await signIn('credentials',{
       redirect:false,
+      callbackUrl:"/dashboard",
       identifier : data.identifier,
       password : data.password
     })
+
     if(result?.error){
       logger.log("Error while signing in")
       toast.error(result?.error || "Login Failed")
       return 
     }
 
-    if(result?.url){
-      router.replace('/dashboard')
-    }
+    if (result?.ok) {
+    window.location.assign(result.url ?? "/dashboard");
+  }
+
   }
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
