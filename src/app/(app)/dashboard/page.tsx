@@ -34,7 +34,7 @@ const UserDashboard = () => {
 
     const handleDeleteMessage = (messageId: string) => {
         setMessages(messages.filter((message) => 
-            message._id !== messageId
+            String(message._id) !== messageId
         ))
     }
 
@@ -45,9 +45,6 @@ const UserDashboard = () => {
             setValue("acceptMessages", Boolean(response.data.isAcceptingMessage))
         } catch (error) {
             logger.error("Error in fetching the accept State of the user",error)
-            // toast.error("Axios Error", {
-            //     description: "Error in fetching the acceptMessage state of the user"
-            // })
         } finally {
             setIsSwitchLoading(false)
         }
@@ -67,9 +64,6 @@ const UserDashboard = () => {
         } catch (error) {
             const axiosError = error as AxiosError
             logger.log(axiosError)
-            // toast.error("Error", {
-            //     description: "Error in fetching the messages"
-            // })
         } finally {
             setIsLoading(false)
             setIsSwitchLoading(false)
@@ -95,9 +89,6 @@ const UserDashboard = () => {
         } catch (error) {
             const axiosError = error as AxiosError
             logger.error("Error from handleSwitchChange", axiosError)
-            // toast.error("Error", {
-            //     description: "Error in changing the switch"
-            // })
         }
     }
 
@@ -130,10 +121,6 @@ const UserDashboard = () => {
             });
         } catch (error) {
             logger.error("Error in copying the profile URL", error)
-            // toast(
-            //     'Copy Failed', {
-            //     description: 'Could not copy URL to clipboard.',
-            // });
         }
     }, [profileUrl]);
 
@@ -145,65 +132,88 @@ const UserDashboard = () => {
     }
 
     return (
-        <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-            <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
+  <div className="relative min-h-screen bg-[#0f172a] text-white pt-28 px-6">
 
-            <div className="mb-4">
-                <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
-                <div className="flex items-center">
-                    <input
-                        type="text"
-                        value={profileUrl}
-                        disabled
-                        className="input input-bordered w-full p-2 mr-2"
-                        readOnly
-                    />
-                    <Button onClick={copyToClipboard}>Copy</Button>
-                </div>
-            </div>
+    <div className="absolute w-[500px] h-[500px] bg-teal-500 blur-3xl opacity-10 rounded-full"></div>
 
-            <div className="mb-4">
-                <Switch
-                    {...register('acceptMessages')}
-                    checked={acceptMessages}
-                    onCheckedChange={handleSwitchChange}
-                    disabled={isSwitchLoading}
-                />
-                <span className="ml-2">
-                    Accept Messages: {acceptMessages ? 'On' : 'Off'}
-                </span>
-            </div>
-            <Separator />
+    <div className="relative max-w-6xl mx-auto">
 
-            <Button
-                className="mt-4"
-                variant="outline"
-                onClick={(e) => {
-                    e.preventDefault();
-                    fetchMessages();
-                }}
-            >
-                {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                    <RefreshCcw className="h-4 w-4" />
-                )}
-            </Button>
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                {messages.length > 0 ? (
-                    messages.map((message) => (
-                        <MessageCard
-                            key={String(message._id)}
-                            message={message}
-                            onMessageDelete={handleDeleteMessage}
-                        />
-                    ))
-                ) : (
-                    <p>No messages to display.</p>
-                )}
-            </div>
+      <h1 className="text-3xl font-bold text-teal-400 mb-8">
+        Dashboard
+      </h1>
+
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+        <h2 className="text-lg font-semibold mb-4">
+          Your Public Link
+        </h2>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            value={profileUrl}
+            disabled
+            readOnly
+            className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-gray-300"
+          />
+          <Button
+            onClick={copyToClipboard}
+            className="bg-teal-400 text-black hover:bg-teal-300"
+          >
+            Copy
+          </Button>
         </div>
-    );
+      </div>
+
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6 flex items-center justify-between">
+        <span>
+          Accept Messages:
+          <span className="ml-2 text-teal-400">
+            {acceptMessages ? "On" : "Off"}
+          </span>
+        </span>
+
+        <Switch
+          {...register("acceptMessages")}
+          checked={acceptMessages}
+          onCheckedChange={handleSwitchChange}
+          disabled={isSwitchLoading}
+        />
+      </div>
+
+      <Separator className="bg-white/10" />
+
+      <Button
+        className="mt-6 bg-white/5 border border-white/10 hover:bg-white/10"
+        onClick={(e) => {
+          e.preventDefault()
+          fetchMessages()
+        }}
+      >
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <RefreshCcw className="h-4 w-4" />
+        )}
+      </Button>
+
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {messages.length > 0 ? (
+          messages.map((message) => (
+            <MessageCard
+              key={String(message._id)}
+              message={message}
+              onMessageDelete={handleDeleteMessage}
+            />
+          ))
+        ) : (
+          <p className="text-gray-400">
+            No messages yet.
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+)
 }
 
 
